@@ -1,0 +1,6 @@
+$ dvc metrics show
+Path                           accuracy    dataset    f1       loss     model      precision    recall
+metrics\train_history.json     -           -          -        -        -          -            -
+metrics\base_metrics.json      0.90693     Test_1     0.90975  0.24757  base       0.88402      0.93703
+metrics\finetune_history.json  -           -          -        -        -          -            -
+metrics\finetune_metrics.json  0.945       Test_2     0.94516  0.15637  finetuned  0.93769      0.95276

@@ -1,0 +1,10 @@
+strict digraph {
+"train";
+"evaluate_base";
+"finetune";
+"evaluate_finetuned";
+"train" -> "evaluate_base";
+"train" -> "finetune";
+"finetune" -> "evaluate_finetuned";
+}
+

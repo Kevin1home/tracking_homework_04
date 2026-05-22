@@ -1,0 +1,16 @@
+# Python 3.10 - 3.13 поддерживаются (pin'ы убраны для совместимости с 3.13)
+torch
+torchvision
+numpy
+pandas
+pillow
+scikit-learn
+matplotlib
+tqdm
+tensorboard
+boto3
+dvc
+dvc-s3
+pyyaml
+jupyter
+ipykernel

@@ -1,0 +1,75 @@
+stages:
+  train:
+    cmd: python -m src.train
+    deps:
+      - src/train.py
+      - src/dataset.py
+      - src/engine.py
+      - src/model.py
+      - src/s3_utils.py
+      - ai-vs-human-generated-dataset-hw/Train_1
+      - ai-vs-human-generated-dataset-hw/Test_1
+    params:
+      - train
+      - data
+      - s3
+    outs:
+      - models/resnet18_base.pth
+      - logs/base
+    metrics:
+      - metrics/train_history.json:
+          cache: false
+
+  evaluate_base:
+    cmd: python -m src.evaluate_base
+    deps:
+      - src/evaluate_base.py
+      - src/dataset.py
+      - src/engine.py
+      - src/model.py
+      - models/resnet18_base.pth
+      - ai-vs-human-generated-dataset-hw/Test_1
+    params:
+      - train
+      - data
+    metrics:
+      - metrics/base_metrics.json:
+          cache: false
+
+  finetune:
+    cmd: python -m src.finetune
+    deps:
+      - src/finetune.py
+      - src/dataset.py
+      - src/engine.py
+      - src/model.py
+      - src/s3_utils.py
+      - models/resnet18_base.pth
+      - ai-vs-human-generated-dataset-hw/Train_2
+      - ai-vs-human-generated-dataset-hw/Test_2
+    params:
+      - finetune
+      - data
+      - s3
+    outs:
+      - models/resnet18_finetuned.pth
+      - logs/finetune
+    metrics:
+      - metrics/finetune_history.json:
+          cache: false
+
+  evaluate_finetuned:
+    cmd: python -m src.evaluate_finetuned
+    deps:
+      - src/evaluate_finetuned.py
+      - src/dataset.py
+      - src/engine.py
+      - src/model.py
+      - models/resnet18_finetuned.pth
+      - ai-vs-human-generated-dataset-hw/Test_2
+    params:
+      - finetune
+      - data
+    metrics:
+      - metrics/finetune_metrics.json:
+          cache: false

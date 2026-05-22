@@ -1,0 +1,266 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m src.train
+    deps:
+    - path: ai-vs-human-generated-dataset-hw/Test_1
+      hash: md5
+      md5: 62c3780e5c19bc53638a42e202acda77.dir
+      size: 229951307
+      nfiles: 3998
+    - path: ai-vs-human-generated-dataset-hw/Train_1
+      hash: md5
+      md5: be4fba47d09ac1e4ff93610c7ce22370.dir
+      size: 577186450
+      nfiles: 9994
+    - path: src/dataset.py
+      hash: md5
+      md5: 1e1b56ed54caa70fa83f9b45f1cc6bdb
+      size: 2605
+    - path: src/engine.py
+      hash: md5
+      md5: b78b49885e7e243a02ab5d7fb5530b84
+      size: 2353
+    - path: src/model.py
+      hash: md5
+      md5: 3770868b485119cfa15ba0ce63bc7869
+      size: 798
+    - path: src/s3_utils.py
+      hash: md5
+      md5: 954fb66012f1e704a938c8e4a09d4852
+      size: 902
+    - path: src/train.py
+      hash: md5
+      md5: 38bc2e72f9b709c88d468d72d4424b8f
+      size: 4994
+    params:
+      params.yaml:
+        data:
+          train_1_csv: ai-vs-human-generated-dataset-hw/Train_1/train.csv
+          train_1_root: ai-vs-human-generated-dataset-hw/Train_1
+          test_1_csv: ai-vs-human-generated-dataset-hw/Test_1/test.csv
+          test_1_root: ai-vs-human-generated-dataset-hw/Test_1
+          train_2_csv: ai-vs-human-generated-dataset-hw/Train_2/train.csv
+          train_2_root: ai-vs-human-generated-dataset-hw/Train_2
+          test_2_csv: ai-vs-human-generated-dataset-hw/Test_2/test.csv
+          test_2_root: ai-vs-human-generated-dataset-hw/Test_2
+        s3:
+          endpoint_url: http://localhost:9000
+          access_key: minioadmin
+          secret_key: minioadmin
+          bucket: models
+          region: us-east-1
+          base_model_key: base/resnet18_base.pth
+          finetuned_model_key: finetuned/resnet18_finetuned.pth
+        train:
+          epochs: 2
+          batch_size: 32
+          lr: 0.001
+          num_workers: 0
+          image_size: 224
+          step_size: 5
+          gamma: 0.1
+          subsample: 0
+          seed: 42
+    outs:
+    - path: logs/base
+      hash: md5
+      md5: 5e15101c4d04d23327e02718c9a59e78.dir
+      size: 1688
+      nfiles: 1
+    - path: metrics/train_history.json
+      hash: md5
+      md5: 78c26d115127d8531664b78a03881a76
+      size: 664
+    - path: models/resnet18_base.pth
+      hash: md5
+      md5: d2d2375214c5cee67d085a5d41bc077e
+      size: 44788427
+  evaluate_base:
+    cmd: python -m src.evaluate_base
+    deps:
+    - path: ai-vs-human-generated-dataset-hw/Test_1
+      hash: md5
+      md5: 62c3780e5c19bc53638a42e202acda77.dir
+      size: 229951307
+      nfiles: 3998
+    - path: models/resnet18_base.pth
+      hash: md5
+      md5: d2d2375214c5cee67d085a5d41bc077e
+      size: 44788427
+    - path: src/dataset.py
+      hash: md5
+      md5: 1e1b56ed54caa70fa83f9b45f1cc6bdb
+      size: 2605
+    - path: src/engine.py
+      hash: md5
+      md5: b78b49885e7e243a02ab5d7fb5530b84
+      size: 2353
+    - path: src/evaluate_base.py
+      hash: md5
+      md5: 039fc949e5da31a4b364d65c261a78a0
+      size: 2351
+    - path: src/model.py
+      hash: md5
+      md5: 3770868b485119cfa15ba0ce63bc7869
+      size: 798
+    params:
+      params.yaml:
+        data:
+          train_1_csv: ai-vs-human-generated-dataset-hw/Train_1/train.csv
+          train_1_root: ai-vs-human-generated-dataset-hw/Train_1
+          test_1_csv: ai-vs-human-generated-dataset-hw/Test_1/test.csv
+          test_1_root: ai-vs-human-generated-dataset-hw/Test_1
+          train_2_csv: ai-vs-human-generated-dataset-hw/Train_2/train.csv
+          train_2_root: ai-vs-human-generated-dataset-hw/Train_2
+          test_2_csv: ai-vs-human-generated-dataset-hw/Test_2/test.csv
+          test_2_root: ai-vs-human-generated-dataset-hw/Test_2
+        train:
+          epochs: 2
+          batch_size: 32
+          lr: 0.001
+          num_workers: 0
+          image_size: 224
+          step_size: 5
+          gamma: 0.1
+          subsample: 0
+          seed: 42
+    outs:
+    - path: metrics/base_metrics.json
+      hash: md5
+      md5: 9527ee8b24ac6404badff1a34cb692a2
+      size: 211
+  finetune:
+    cmd: python -m src.finetune
+    deps:
+    - path: ai-vs-human-generated-dataset-hw/Test_2
+      hash: md5
+      md5: be5492c21e2dec84056e1599a807ccd1.dir
+      size: 114391042
+      nfiles: 2001
+    - path: ai-vs-human-generated-dataset-hw/Train_2
+      hash: md5
+      md5: cd8edb58d893e35241fdf8fbf6049229.dir
+      size: 229344118
+      nfiles: 3998
+    - path: models/resnet18_base.pth
+      hash: md5
+      md5: d2d2375214c5cee67d085a5d41bc077e
+      size: 44788427
+    - path: src/dataset.py
+      hash: md5
+      md5: 1e1b56ed54caa70fa83f9b45f1cc6bdb
+      size: 2605
+    - path: src/engine.py
+      hash: md5
+      md5: b78b49885e7e243a02ab5d7fb5530b84
+      size: 2353
+    - path: src/finetune.py
+      hash: md5
+      md5: 499e1cce7ae760eade2d6023a2f26e5c
+      size: 5571
+    - path: src/model.py
+      hash: md5
+      md5: 3770868b485119cfa15ba0ce63bc7869
+      size: 798
+    - path: src/s3_utils.py
+      hash: md5
+      md5: 954fb66012f1e704a938c8e4a09d4852
+      size: 902
+    params:
+      params.yaml:
+        data:
+          train_1_csv: ai-vs-human-generated-dataset-hw/Train_1/train.csv
+          train_1_root: ai-vs-human-generated-dataset-hw/Train_1
+          test_1_csv: ai-vs-human-generated-dataset-hw/Test_1/test.csv
+          test_1_root: ai-vs-human-generated-dataset-hw/Test_1
+          train_2_csv: ai-vs-human-generated-dataset-hw/Train_2/train.csv
+          train_2_root: ai-vs-human-generated-dataset-hw/Train_2
+          test_2_csv: ai-vs-human-generated-dataset-hw/Test_2/test.csv
+          test_2_root: ai-vs-human-generated-dataset-hw/Test_2
+        finetune:
+          epochs: 1
+          batch_size: 32
+          lr: 0.0001
+          num_workers: 0
+          image_size: 224
+          step_size: 5
+          gamma: 0.1
+          subsample: 0
+          seed: 42
+        s3:
+          endpoint_url: http://localhost:9000
+          access_key: minioadmin
+          secret_key: minioadmin
+          bucket: models
+          region: us-east-1
+          base_model_key: base/resnet18_base.pth
+          finetuned_model_key: finetuned/resnet18_finetuned.pth
+    outs:
+    - path: logs/finetune
+      hash: md5
+      md5: a90cb9c56e0c8c4a5987fe1bb02b89d5.dir
+      size: 702
+      nfiles: 1
+    - path: metrics/finetune_history.json
+      hash: md5
+      md5: 14a7670d6101fcd3a1597d8e1bbd947d
+      size: 322
+    - path: models/resnet18_finetuned.pth
+      hash: md5
+      md5: 8be31679a31b6086f969af761dbda204
+      size: 44789067
+  evaluate_finetuned:
+    cmd: python -m src.evaluate_finetuned
+    deps:
+    - path: ai-vs-human-generated-dataset-hw/Test_2
+      hash: md5
+      md5: be5492c21e2dec84056e1599a807ccd1.dir
+      size: 114391042
+      nfiles: 2001
+    - path: models/resnet18_finetuned.pth
+      hash: md5
+      md5: 8be31679a31b6086f969af761dbda204
+      size: 44789067
+    - path: src/dataset.py
+      hash: md5
+      md5: 1e1b56ed54caa70fa83f9b45f1cc6bdb
+      size: 2605
+    - path: src/engine.py
+      hash: md5
+      md5: b78b49885e7e243a02ab5d7fb5530b84
+      size: 2353
+    - path: src/evaluate_finetuned.py
+      hash: md5
+      md5: ffde3ca7015cf7cf0233079003a8aa82
+      size: 2287
+    - path: src/model.py
+      hash: md5
+      md5: 3770868b485119cfa15ba0ce63bc7869
+      size: 798
+    params:
+      params.yaml:
+        data:
+          train_1_csv: ai-vs-human-generated-dataset-hw/Train_1/train.csv
+          train_1_root: ai-vs-human-generated-dataset-hw/Train_1
+          test_1_csv: ai-vs-human-generated-dataset-hw/Test_1/test.csv
+          test_1_root: ai-vs-human-generated-dataset-hw/Test_1
+          train_2_csv: ai-vs-human-generated-dataset-hw/Train_2/train.csv
+          train_2_root: ai-vs-human-generated-dataset-hw/Train_2
+          test_2_csv: ai-vs-human-generated-dataset-hw/Test_2/test.csv
+          test_2_root: ai-vs-human-generated-dataset-hw/Test_2
+        finetune:
+          epochs: 1
+          batch_size: 32
+          lr: 0.0001
+          num_workers: 0
+          image_size: 224
+          step_size: 5
+          gamma: 0.1
+          subsample: 0
+          seed: 42
+    outs:
+    - path: metrics/finetune_metrics.json
+      hash: md5
+      md5: c923638fdb198490c1dfbef3e5c54ce4
+      size: 204

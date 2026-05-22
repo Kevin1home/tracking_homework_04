@@ -1,0 +1,48 @@
+data:
+  train_1_csv: ai-vs-human-generated-dataset-hw/Train_1/train.csv
+  train_1_root: ai-vs-human-generated-dataset-hw/Train_1
+  test_1_csv: ai-vs-human-generated-dataset-hw/Test_1/test.csv
+  test_1_root: ai-vs-human-generated-dataset-hw/Test_1
+  train_2_csv: ai-vs-human-generated-dataset-hw/Train_2/train.csv
+  train_2_root: ai-vs-human-generated-dataset-hw/Train_2
+  test_2_csv: ai-vs-human-generated-dataset-hw/Test_2/test.csv
+  test_2_root: ai-vs-human-generated-dataset-hw/Test_2
+
+train:
+  epochs: 2
+  batch_size: 32
+  lr: 0.001
+  num_workers: 0          # CPU + WSL: безопаснее 0, чтобы не падать на multiprocessing
+  image_size: 224
+  step_size: 5
+  gamma: 0.1
+  subsample: 0             # 0 = весь датасет; иначе - случайное N для ускорения на CPU
+  seed: 42
+
+finetune:
+  epochs: 1
+  batch_size: 32
+  lr: 0.0001               # меньший lr для дообучения
+  num_workers: 0
+  image_size: 224
+  step_size: 5
+  gamma: 0.1
+  subsample: 0
+  seed: 42
+
+s3:
+  endpoint_url: http://localhost:9000
+  access_key: minioadmin
+  secret_key: minioadmin
+  bucket: models
+  region: us-east-1
+  base_model_key: base/resnet18_base.pth
+  finetuned_model_key: finetuned/resnet18_finetuned.pth
+
+paths:
+  base_model: models/resnet18_base.pth
+  finetuned_model: models/resnet18_finetuned.pth
+  base_metrics: metrics/base_metrics.json
+  finetune_metrics: metrics/finetune_metrics.json
+  tb_logs_base: logs/base
+  tb_logs_finetune: logs/finetune
